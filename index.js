@@ -4,6 +4,7 @@ const port = 5000;
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { User } = require("./models/User");
+const { auth } = require("./middleware/auth");
 
 const config = require("./config/key");
 // config/key.js에서 production에 따른 URI 참조 방식을
@@ -32,7 +33,7 @@ mongoose
 // connect()
 app.get("/", (req, res) => res.send("Hello World! 안녕하세요!"));
 
-app.post("/register", async (req, res) => {
+app.post("/api/users/register", async (req, res) => {
   //회원가입시 필요 정보를 client에서 가져오면
   //데이터베이스에 삽입한다
 
@@ -85,5 +86,36 @@ app.post("/api/users/login", async (req, res) => {
     });
   });
 });
+
+app.get('/api/users/auth', async(req,res) => {
+
+  // 여기까지 미들웨어를 통과해왔다는 것은 
+  // Authentication이 True라는 말.
+  // 이제 user 정보를 제공해주면 된다. 원하는 것을 선택해서,,
+
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.role === 0 ? false : true, 
+    // 이는 얼마든지 바꿀 수 있다. role 숫자에 따라 직분을 결정한다던지,,
+    // role 1 어드민    role 2 특정 부서 어드민
+    // role 0 일반유저   그 외에는 관리자 등등,,
+
+    isAuth: true,
+    email : req.user.email,
+    name: req.user.name,
+    lastname: req.user.lastname,
+    role: req.user.role,
+    image: req.user.image
+  })
+
+
+})
+
+
+
+
+
+
+
 
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
