@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 const saltRounds = 10
 
 const userSchema = mongoose.Schema({
@@ -45,13 +46,13 @@ userSchema.pre('save', function (next) {
         // 비밀번호를 암호화시킴
         // Salt 값을 이용해서 비밀번호를 암호화시킴. 
         // saltRounds : salt가 몇글자인지
-        bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.genSalt(saltRounds, function(err, salt) {
             // next() : user 저장되는 과정으로 넘김
 
-            if (err) { return next(err) }
+            if (err) return next(err)
             // salt를 만드는데 문제가 생기면 그냥 넘김
 
-            bcrypt.hash(user.password, salt, (err, hash) => {
+            bcrypt.hash(user.password, salt, function(err, hash) {
                 if (err) return next(err)
                 // hash값을 넘기는데 문제가 생기면 그냥 넘김
 
@@ -59,6 +60,8 @@ userSchema.pre('save', function (next) {
                 next()
             })
         })
+    } else {
+        next()
     }
 })
 
