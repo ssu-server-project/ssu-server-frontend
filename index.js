@@ -14,14 +14,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(bodyParser.json())
 
+
+const mongoose = require('mongoose')
+// require() : 파일 경로를 인수로받아서 해당 파일에서 내보낸
+// 객체를 반환하는 함수. 
+
+
 //    "mongoose": "^7.0.3",
 // config 안의 mongoURI를 가져와주는 방식.
-const mongoose = require('mongoose')
 mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,useUnifiedTopology: true,useCreateIndex : true,
 }).then(() => console.log('MongoDB Connected...'))
 .catch(err=>console.log(err))
-
+// connect()
 app.get('/', (req, res) =>  res.send('Hello World! 안녕하세요!'))
 
 app.post('/register', async (req, res) => {
