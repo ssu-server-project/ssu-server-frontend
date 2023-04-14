@@ -34,6 +34,7 @@ const userSchema = mongoose.Schema({
     }
 })
 
+
 userSchema.pre('save', function (next) {
     // User가 저장되기 전에 작업되도록 함. 
 
@@ -96,6 +97,28 @@ userSchema.methods.generateToken = function(cb) {
     })
 
 }
-const User = mongoose.model('User', userSchema);
 
-module.exports = { User }
+
+userSchema.statics.findByToken = function(token,cb) {
+    var user = this;
+
+    // 토큰을 decode 한다. 
+    // 지난번에 id와 'secretToken'을 합쳐서 token을 만들고, 
+    // 'secretToken'을 제공하면 id이 제공되었다.
+    jwt.verify(token,'secretToken',function(err,decoded) {
+        // 유저 아이디를 이용해서 유저를 찾은 다음에
+        // 클라이언트에서 가져온 token과 DB에 보관된 토큰이 일치하는지 확인함.
+
+        user.findOne({"_id": decoded, "token": token}, function(err,user) {
+
+            if(err) return cb(err);
+            cb(null,user);
+        })
+    })
+}
+
+const User = mongoose.model('User', userSchema);
+// js도 순차적으로 실행해주나보다. 이 문장이 userSchema 위로 가면 안된다.
+
+
+module.exports = { User };

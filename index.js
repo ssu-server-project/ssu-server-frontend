@@ -87,6 +87,7 @@ app.post("/api/users/login", async (req, res) => {
   });
 });
 
+//#13. authentication 기능 구현 
 app.get('/api/users/auth', async(req,res) => {
 
   // 여기까지 미들웨어를 통과해왔다는 것은 
@@ -107,13 +108,20 @@ app.get('/api/users/auth', async(req,res) => {
     role: req.user.role,
     image: req.user.image
   })
-
-
 })
 
-
-
-
+// #14 로그아웃 기능 구현
+// 이미 로그인된 상태이기 때문에 auth를 넣어준다.
+app.get('/api/users/logout', auth,async (req,res) => {
+  User.findOneAndUpdate({_id: req.user._id},
+    {token: ""},
+    (err,user)=> {
+      if(err) return res.json({success:false,err});
+      return res.status(200).send({
+        success: true
+      })
+    })
+})
 
 
 
