@@ -1,5 +1,13 @@
 # Node.js 강의 실습 자료
 
+## 1. boiler-plate
+자주 쓸 수 있는 템플릿같은 개념.
+
+## 2. NODE JS, EXPRESS JS 다운로드
+js는 원래 웹 안에서만 사용했는데, NODE JS 가 나옴으로서 서버 환경으로도 NODE JS를 사용할 수 있게 되었음. 
+
+
+
 ### URI 암호화
 github에서도 환경변수 설정을 해줄 수 있다.
 ![image](https://user-images.githubusercontent.com/81542290/231735848-47119e60-01f0-4d1b-9204-f06f8caf5d5d.png)

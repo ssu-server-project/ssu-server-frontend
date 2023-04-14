@@ -1,21 +1,21 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-const saltRounds = 10
+const saltRounds = 10 // bcrypt에서 salt의 길이
 const jwt = require('jsonwebtoken')
 
 const userSchema = mongoose.Schema({
     name: {
         type: String,
-        maxlength: 50
+        maxlength: 50 // maxlength : 최대길이
     },
     email: {
         type: String,
-        trim: true,
-        unique: 1
+        trim: true, // 앞의 공백을 제거
+        unique: 1 // unique : 중복 불가
     },
     password: {
         type: String,
-        minLength: 5
+        minLength: 5 // minlength : 최소길이
     },
     lastname: {
         type: String,
@@ -23,7 +23,7 @@ const userSchema = mongoose.Schema({
     },
     role: {
         type: Number,
-        default: 0
+        default: 0 // default : 입력이 없을 시 기본값.
     },
     image: String,
     token: {
@@ -33,7 +33,6 @@ const userSchema = mongoose.Schema({
         type: Number
     }
 })
-
 
 userSchema.pre('save', function (next) {
     // User가 저장되기 전에 작업되도록 함. 
@@ -74,6 +73,7 @@ userSchema.methods.comparePassword = function(plainPassword, cb) {
     // plainPassword 12341234 
     // 암호화된 비밀번호 : $2b$10$z929l0XFRLkjbYEw3zjhjeB.acUmi3M.g80665Rp1x16wK8HKOBh.
     // 이 둘이 같은지 확인해야 한다. plainPassword를 암호화해서 확인한다.
+    // bcrypt 라이브러리 내부에서 password와 salt값을 함께 저장한다고 한다.
 
     bcrypt.compare(plainPassword,this.password,function(err,isMatch) {
         if(err) return cb(err);
@@ -91,11 +91,12 @@ userSchema.methods.generateToken = function(cb) {
     // 'secretToken' -> user._id
 
     user.token = token
+
+    // 토큰을 db에 저장해준다.
     user.save(function(err,user) {
         if(err) return cb(err);
         cb(null, user)
     })
-
 }
 
 
@@ -118,7 +119,10 @@ userSchema.statics.findByToken = function(token,cb) {
 }
 
 const User = mongoose.model('User', userSchema);
-// js도 순차적으로 실행해주나보다. 이 문장이 userSchema 위로 가면 안된다.
+// 위에 함수들이 schema를 정의하는 작업이다.
+// 이 문장에서 model과 schema를 bind시켜주므로,
+// model()은 schema 정의가 모두 끝나고 가장 아래에 넣어주어야 한다.
 
 
 module.exports = { User };
+// 다른 곳에서도 쓸 수 있도록 model을 export
