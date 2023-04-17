@@ -1,6 +1,5 @@
 const express = require("express"); // express 모듈을 가져오기
 const app = express(); // 새로운 express 앱을 만듬
-const port = 5000;
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { User } = require("./models/User");
@@ -142,6 +141,8 @@ app.get('/api/users/logout',auth,async (req,res) => {
 app.get('/api/hello', (req,res)=> {
   res.send("/api/hello 로 전달 완료!")
 })
+
+const port = 5000;
 
 // 해당 port로 요청이 들어오면 해당 log를 출력
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
