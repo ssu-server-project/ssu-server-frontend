@@ -5,9 +5,9 @@ import {
   BrowserRouter
 } from "react-router-dom";
 
-import LandingPage from "./views/LandingPage/LandingPage";
-import LoginPage from "./views/LoginPage/LoginPage";
-import RegisterPage from "./views/RegisterPage/RegisterPage";
+import LandingPage from "./components/views/LandingPage/LandingPage";
+import LoginPage from "./components/views/LoginPage/LoginPage";
+import RegisterPage from "./components/views/RegisterPage/RegisterPage";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
           <Route exact path="/login" element={LoginPage()}/>
           
           <Route exact path="/register" element={RegisterPage()}/>
-          
+          {/* 해당 path에서 다음 메소드가 실행되도록*/ }
         </Routes>
       </div>
     </BrowserRouter>

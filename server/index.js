@@ -139,7 +139,9 @@ app.get('/api/users/logout',auth,async (req,res) => {
     })
 })
 
-
+app.get('/api/hello', (req,res)=> {
+  res.send("/api/hello 로 전달 완료!")
+})
 
 // 해당 port로 요청이 들어오면 해당 log를 출력
 app.listen(port, () => console.log(`Example app listening on port ${port}`));
