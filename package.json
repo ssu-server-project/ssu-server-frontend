@@ -12,8 +12,7 @@
   "author": "ParkCH",
   "license": "ISC",
   "dependencies": {
-    "18": "^0.0.0",
-    "ant": "^0.2.0",
+    "@reduxjs/toolkit": "^1.9.4",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "concurrently": "^8.0.1",
@@ -22,11 +21,6 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.4.20",
-    "node": "^19.8.1",
-    "react-redux": "^8.0.5",
-    "redux": "^4.2.1",
-    "redux-promise": "^0.6.0",
-    "redux-thunk": "^2.4.2",
     "session-file-store": "^1.5.0"
   },
   "devDependencies": {
