@@ -7,7 +7,7 @@ import {
 
 // 인자로 previous state와 action을 넣어주고
 // 변경된 state를 리턴해줌
-export default function reducer(state = {}, action) {
+export default function Reducer(state = {}, action) {
     switch (action.type) {
         case LOGIN_USER :
             return {...state, loginSuccess: action.payload}

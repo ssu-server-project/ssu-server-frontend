@@ -43,6 +43,7 @@ function LoginPage(props) {
       } else {
         alert("Fail to login. please check your ID/PW");
       }
+      console.log(response.payload);
     });
   };
 
