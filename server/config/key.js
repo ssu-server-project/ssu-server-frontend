@@ -1,6 +1,6 @@
 if(process.env.NODE_ENV==='production') {
     // 배포가 되었을 경우
-    module.exports = require('./prod');
+    module.exports = require('./dev');
 } else {
     // local 환경인 경우
     module.exports = require('./dev');

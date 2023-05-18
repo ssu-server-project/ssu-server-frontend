@@ -12,7 +12,7 @@ function LandingPage() {
     .then(response => console.log(response.data))
   },[])
 
-  const onClickHandler = () => {
+  function onLogoutClickHandler() {
     axios.get('/api/users/logout')
       .then(response => {
         if (response.data.success) {
@@ -20,8 +20,13 @@ function LandingPage() {
         } else {
           alert("Fail to logout.");
         }
-        console.log(response.data)
-      })
+        console.log(response.data);
+      });
+  }
+  function onSrvRoomClickHandler() {
+
+          navigate("/serverRoom");
+          console.log("serverRoom으로 이동!");
   }
   
   return (
@@ -31,7 +36,10 @@ function LandingPage() {
     }}>
       <h2> 시작 페이지</h2>
 
-      <button onClick={onClickHandler}>
+      <button onCLick={onSrvRoomClickHandler}>
+        서버 룸
+      </button>
+      <button onClick={onLogoutClickHandler}>
         로그아웃
       </button>
     </div>

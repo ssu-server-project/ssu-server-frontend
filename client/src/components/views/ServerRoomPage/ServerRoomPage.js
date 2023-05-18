@@ -1,10 +1,10 @@
-import './App.css';
+import './ServerRoomPage.css';
 import React, {useState} from 'react'
 
 function divClick() {
   alert("서버 IP 주소 내용");
 }
-function App() {
+function ServerRoomPage(props) {
 
   return (
     <div>
@@ -12,7 +12,7 @@ function App() {
         <ul class="header-ul">
             <li id="logo">
                 <a href="https://ssu.ac.kr/">
-                    <img src="soongsil.jpeg"></img>
+                    <img src="image/soongsil.png" />
                 </a>
             </li>
             <li><a>숭실대학교</a></li>
@@ -56,4 +56,4 @@ function App() {
   );
 }
 
-export default App;
+export default ServerRoomPage;
