@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import {useDispatch } from "react-redux";
 import { registerUser } from "../../../_actions/user_action";
-import { useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
+import NavBar from "../NavBar/NavBar";
+import './RegisterPage.css';
 
 function RegisterPage(props) {
 
@@ -63,19 +65,49 @@ function RegisterPage(props) {
         }
     });
   };
+  const onLoginHandler = () => {
+    navigate("/login");
+};
 
   return (
     <div
       style={{
         display: "flex",
+        flexDirection:"column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
         height: "100vh",
       }}
     >
+      <header
+        style={{
+          marginBottom:"290px",
+          width:"100%",
+        }}>
+        <ul class="header-ul">
+            <li id="logo">
+                <a href="https://ssu.ac.kr/">
+                    <img style={{width:"400px",marginLeft:"200px" }} src="image/soongsil.png" />
+                </a>
+            </li>
+            <li><a>숭실대학교</a></li>
+            <li><a>서버</a></li>
+            <li><a>대여 시스템</a></li>
+            <li id="vertical-line">|</li>
+            <li><a>NDI</a></li>
+        </ul>
+
+        <ul class="header-ul">
+            <li id="name">사용자 이름</li>
+            <li>
+                <img src="https://i.pinimg.com/564x/7a/c4/ed/7ac4edd64a67fccd0e2d547a9ffde845.jpg" id="profile-img"
+                    alt="profile"></img>
+            </li>
+        </ul>
+    </header>
       <form
-        style={{ display: "flex", flexDirection: "column" }}
+        style={{ display: "flex", flexDirection: "column", marginBottom:"370px" }}
         // submit이 되면 handler가 실행된다.
         onSubmit={onSubmitHandler}
       >
@@ -99,7 +131,14 @@ function RegisterPage(props) {
         />
 
         <br />
-        <button type="submit">회원가입</button>
+        <div
+          style={{
+            display:"flex",
+            gap:"30px"
+          }}>
+          <button type="submit">회원가입</button>
+          <button onClick={onLoginHandler}>로그인</button>
+        </div>
       </form>
     </div>
   );

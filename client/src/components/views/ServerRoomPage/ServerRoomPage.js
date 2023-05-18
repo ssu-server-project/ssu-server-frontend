@@ -1,18 +1,32 @@
 import './ServerRoomPage.css';
 import React, {useState} from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function divClick() {
   alert("서버 IP 주소 내용");
 }
-function ServerRoomPage(props) {
 
+function ServerRoomPage(props) {
+  const navigate = useNavigate();
+  function onLogoutClickHandler() {
+    axios.get('/api/users/logout')
+      .then(response => {
+        if (response.data.success) {
+          navigate("/login");
+        } else {
+          alert("Fail to logout.");
+        }
+        console.log(response.data);
+      });
+  }
   return (
     <div>
         <header>
         <ul class="header-ul">
             <li id="logo">
                 <a href="https://ssu.ac.kr/">
-                    <img src="image/soongsil.png" />
+                    <img style={{width:"400px",marginLeft:"200px" }} src="image/soongsil.png" />
                 </a>
             </li>
             <li><a>숭실대학교</a></li>
@@ -23,7 +37,8 @@ function ServerRoomPage(props) {
         </ul>
 
         <ul class="header-ul">
-            <li id="name">윤주호</li>
+          <button onClick={onLogoutClickHandler}>로그아웃</button>
+            <li id="name">로그인 이름 넣어주세요</li>
             <li>
                 <img src="https://i.pinimg.com/564x/7a/c4/ed/7ac4edd64a67fccd0e2d547a9ffde845.jpg" id="profile-img"
                     alt="profile"></img>

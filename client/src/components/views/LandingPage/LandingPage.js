@@ -32,16 +32,43 @@ function LandingPage() {
   return (
     <div style= {{
       display: 'flex', justifyContent: 'center', alignItems: 'center',
-      width: '100%', height: '100vh'
+      width: '100%', height: '100vh',flexDirection:"column",
     }}>
-      <h2> 시작 페이지</h2>
+      <header
+        style={{
+          marginBottom:"350px",
+          width:"100%",
+        }}>
+        <ul class="header-ul">
+            <li id="logo">
+                <a href="https://ssu.ac.kr/">
+                    <img style={{width:"400px",marginLeft:"200px" }} src="image/soongsil.png" />
+                </a>
+            </li>
+            <li><a>숭실대학교</a></li>
+            <li><a>서버</a></li>
+            <li><a>대여 시스템</a></li>
+            <li id="vertical-line">|</li>
+            <li><a>NDI</a></li>
+        </ul>
 
-      <button onCLick={onSrvRoomClickHandler}>
-        서버 룸
-      </button>
-      <button onClick={onLogoutClickHandler}>
-        로그아웃
-      </button>
+        <ul class="header-ul">
+            <li id="name">사용자 이름</li>
+            <li>
+                <img src="https://i.pinimg.com/564x/7a/c4/ed/7ac4edd64a67fccd0e2d547a9ffde845.jpg" id="profile-img"
+                    alt="profile"></img>
+            </li>
+        </ul>
+    </header>
+      <h2> 시작 페이지</h2>
+      <div
+        style={{
+          marginBottom:"425px"
+        }}>
+        <button onClick={onSrvRoomClickHandler}>
+          서버 룸
+        </button>
+      </div>
     </div>
   )
 }

@@ -45,21 +45,50 @@ function LoginPage(props) {
       console.log(response.payload);
     });
   };
-
+  const onRegisterHandler = () => {
+        navigate("/register");
+  };
   return (
     <div
       style={{
         display: "flex",
+        flexDirection:"column",
         justifyContent: "center",
         alignItems: "center",
         width: "100%",
         height: "100vh",
       }}
     >
+      <header
+        style={{
+          marginBottom:"340px",
+          width:"100%",
+        }}>
+        <ul class="header-ul">
+            <li id="logo">
+                <a href="https://ssu.ac.kr/">
+                    <img style={{width:"400px",marginLeft:"200px" }} src="image/soongsil.png" />
+                </a>
+            </li>
+            <li><a>숭실대학교</a></li>
+            <li><a>서버</a></li>
+            <li><a>대여 시스템</a></li>
+            <li id="vertical-line">|</li>
+            <li><a>NDI</a></li>
+        </ul>
+
+        <ul class="header-ul">
+            <li id="name">사용자 이름</li>
+            <li>
+                <img src="https://i.pinimg.com/564x/7a/c4/ed/7ac4edd64a67fccd0e2d547a9ffde845.jpg" id="profile-img"
+                    alt="profile"></img>
+            </li>
+        </ul>
+    </header>
       <form
-        style={{ display: "flex", flexDirection: "column" }}
-        // submit이 되면 handler가 실행된다.
+        style={{ display: "flex", flexDirection: "column", marginBottom:"400px" }}
         onSubmit={onSubmitHandler}
+        onRegister={onRegisterHandler}
       >
         {/* 각 state를 value로 넣어줌*/}
         {/* 타이핑을 칠 때 onChange를  발생시켜서
@@ -69,7 +98,14 @@ function LoginPage(props) {
         <label>Password</label>
         <input type="password" value={Password} onChange={onPasswordHandler} />
         <br />
-        <button type="submit">Login</button>
+        <div
+          style={{
+            display:"flex",
+            gap:"34px"
+          }}>
+          <button type="submit">Login</button>
+          <button onClick={onRegisterHandler}>Register</button>
+        </div>
       </form>
     </div>
   );
