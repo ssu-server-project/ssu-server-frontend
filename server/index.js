@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { User } = require("./models/User");
 const { auth } = require("./middleware/auth");
+const Docker = require("dockerode");
 
 const config = require("./config/key");
 // config/key.js에서 production에 따른 URI 참조 방식을
@@ -36,13 +37,13 @@ mongoose
   .catch((err) => console.log(err)); // err catch
 // connect()
 
-const Docker = require("dockerode");
 
 // Docker 서버에 연결된 Docker 클라이언트 생성
 // const dockerClient = new Docker({ host: '172.17.0.1', port: 2375 });
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 const exec = require('child_process').exec;
 const fs = require('fs');
+const { isUtf8 } = require("buffer");
 
 // 루트 디렉토리에 오면 Hello World를 출력하도록
 app.get("/", (req, res) => res.send("Hello World! 안녕하세요!"));
@@ -136,8 +137,10 @@ app.post('/docker/api/v1/img-delete/', async (req, res) => {
     }
   });
 });
+('/stop', async (req, res) => {
 
 
+});
 // API: /docker/api/v1/img-delete-all (GET)
 // 설명: GET 매서드를 이용하여 모든 이미지들을 삭제한다.
 app.get('/docker/api/v1/img-delete-all/', async (req, res) => {
@@ -160,6 +163,57 @@ app.get('/docker/api/v1/img-delete-all/', async (req, res) => {
   });
 });
 
+async function getRunningContainerCount() {
+  try {
+    const response = await docker.listContainers();
+  const containerIDs = [];
+  for (const containerObj of response) {
+    containerIDs.push(containerObj.Id);
+  }
+  res.json(containerIDs.length)
+  } catch (error) {
+    console.error('Failed to get running container count:', error);
+    throw error;
+  }
+}
+
+app.get('/docker/api/v1/num-container', (req, res) => {
+  docker.listContainers((err, containers) => {
+    if (err) {
+      console.error('Error:', err);
+      res.status(500).send('Error occurred');
+    } else {
+      const containerCount = containers.length;
+      res.json({ count: containerCount });
+    }
+  });
+});
+
+// CPU 상태를 반환하는 API 엔드포인트를 정의합니다.
+app.get('/docker/api/v1/cpu-stats', (req, res) => {
+  docker.info((err, info) => {
+    if (err) {
+      console.error('오류:', err);
+      res.status(500).send('오류가 발생했습니다.');
+    } else {
+      const cpuStats = info.CPUsStats;
+      res.json(cpuStats);
+    }
+  });
+});
+
+// 메모리 상태를 반환하는 API 엔드포인트를 정의합니다.
+app.get('/docker/api/v1/memory-stats', (req, res) => {
+  docker.info((err, info) => {
+    if (err) {
+      console.error('오류:', err);
+      res.status(500).send('오류가 발생했습니다.');
+    } else {
+      const memoryStats = info.MemStats;
+      res.json(memoryStats);
+    }
+  });
+});
 
 // API: /docker/api/v1/run (POST)
 // 설명: POST 매서드를 이용하여 image와 path를 파싱하여 해당 path의 image를 run 하도록 수행.
@@ -167,7 +221,13 @@ app.get('/docker/api/v1/img-delete-all/', async (req, res) => {
 app.post('/docker/api/v1/img-run/', async (req, res) => {
   const imageName = req.body.image;
   const pathArray = req.body.path;
-  docker.run(imageName, pathArray, process.stdout, (err, data, container) => {
+  const containerName = req.body.name;
+
+  const containerOptions = {
+    name : containerName
+  };
+
+  docker.run(imageName, pathArray, process.stdout, containerOptions,(err, data, container) => {
     if (err) {
       res.json(err);
       console.log(err);
@@ -183,14 +243,31 @@ app.post('/docker/api/v1/img-run/', async (req, res) => {
 
 // API: /docker/api/v1/stop (POST)
 // 설명: POST 매서드를 이용하여 container name을 파싱하여 해당 컨테이너를 종료한다.
-// 형식: post 안의 메시지 형식은 다음 { 'container' : <containerName> } 와 같다.
+// 형식: post 안의 메시지 형식은 다음 { 'containerName' : <containerName> } 와 같다.
 app.post('/docker/api/v1/stop/', async (req, res) => {
-  const containerName = req.body.container;
-  container = docker.getContainer(containerName);
-  container.stop();
-  res.json('Done!');
-});
+  try {
+    // 클라이언트에서 전달된 데이터 추출
+    const { containerName } = req.body;
 
+    // 컨테이너 조회
+    const container = await docker.getContainer(containerName);
+
+    if (!container) {
+      console.log(`컨테이너 ${containerName} 찾을 수 없음`);
+      return res.status(404).send(`컨테이너 ${containerName} 찾을 수 없음`);
+    }
+
+    // 컨테이너 중지
+    await container.stop();
+
+    console.log(`컨테이너 ${containerName} 중지됨`);
+
+    res.send(`컨테이너 ${containerName} 중지됨`);
+  } catch (error) {
+    console.error('오류 발생:', error);
+    res.status(500).send('오류 발생');
+  }
+});
 
 // API: /docker/api/v1/stop-all (POST)
 // 설명: POST 매서드를 이용하여 로컬에서 실행중인 모든 도커 컨테이너를 종료한다.
@@ -199,6 +276,77 @@ app.post('/docker/api/v1/stop-all/', async (req, res) => {
   exec('sudo docker stop $(sudo docker ps -a -q )');
 });
 
+// app.get('/docker/api/v1/server-status/', async (req,res) => {
+//   const Response = { cpu : '', mem : '' };
+//   exec('top -b -n 1 | grep "Cpu(s)" | awk {print $2} > ./cpu',(err,stdout, stderr) => {
+//     fs.readFile('./cpu','utf8',(err,data) => {
+//       if (err) {
+//         console.log(err);
+//         Response.cpu = err;
+//       } else {
+//         console.log(data);
+//         Response.cpu = data;
+//       }
+//     })
+//   });
+//   exec('docker ps -a | grep ${ContainerName} > ./cpu',(err,stdout, stderr) => {
+//     fs.readFile('./cpu','utf8',(err,data) => {
+//       if (err) {
+//         console.log(err);
+//         Response.cpu = err;
+//       } else {
+//         console.log(data);
+//         Response.cpu = data;
+//       }
+//     })
+//   });
+// });
+
+app.get('/docker/api/v1/server-status/', async (req, res) => {
+  try {
+    const response = {};
+
+    exec('top -b -n 1 | grep "Cpu(s)" | awk \'{print $2}\'', (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        response.cpu = err;
+      } else {
+        const cpuUsage = parseFloat(stdout.trim());
+        response.cpu = cpuUsage;
+      }
+    });
+
+    exec('free | grep Mem', (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        response.mem = err;
+      } else {
+        const memInfo = stdout.split(/\s+/);
+        const totalMemory = parseFloat(memInfo[1]);
+        const usedMemory = parseFloat(memInfo[2]);
+        const memoryUsage = (usedMemory / totalMemory) * 100;
+        response.mem = memoryUsage.toFixed(2);
+      }
+    });
+
+    exec('docker ps -aq | wc -l', (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        response.containerCount = err;
+      } else {
+        const containerCount = parseInt(stdout.trim());
+        response.containerCount = containerCount;
+      }
+    });
+
+    setTimeout(() => {
+      res.json(response);
+    }, 1000);
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'An error occurred' });
+  }
+});
 
 // API: /docker/api/v1/state/ (POST)
 // 설명: POST 매서드를 이용, container-name을 파싱하여 해당 컨테이너의 상태를 json으로 send.
@@ -207,7 +355,7 @@ app.post('/docker/api/v1/state/', async (req, res) => {
   ContainerName = req.body.container;
   const Response = { PS: '', STATS: '' };
   exec(`sudo docker ps -a | grep ${ContainerName} > ./tmpPs`, (err, stdout, stderr) => {
-    exec('sudo chmod +wx ./tmpPs');
+    //exec('sudo chmod +wx ./tmpPs');
     fs.readFile('./tmpPs', 'utf8', (err, data) => {
       if (err) {
         console.log(err);
@@ -219,7 +367,7 @@ app.post('/docker/api/v1/state/', async (req, res) => {
     });
   });
   exec(`sudo docker stats ${ContainerName} --no-stream > ./tmpStats`, (err, stdout, stderr) => {
-    exec('sudo chmod +wx ./tmpStats');
+    //exec('sudo chmod +wx ./tmpStats');
     fs.readFile('./tmpStats', 'utf8', (err, data) => {
       if (err) {
         console.log(err);
