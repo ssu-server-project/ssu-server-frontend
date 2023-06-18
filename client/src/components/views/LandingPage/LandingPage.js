@@ -120,7 +120,14 @@ function LandingPage() {
 
         {/* PieChart */}
         <PieChart
-          data={chartData}
+          data={[
+          {
+            value: memData,
+            color: '#F6CB44',
+            name: 'name1',
+          },
+        ]}
+          reveal={10}
           lineWidth={18}
           background="#f3f3f3"
           lengthAngle={360}
