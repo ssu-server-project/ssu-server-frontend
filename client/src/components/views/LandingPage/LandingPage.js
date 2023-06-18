@@ -24,15 +24,18 @@ function LandingPage() {
       });
   }
 
-  axios.get('/docker/api/v1/state/')
-    .then(response => {
-      console.log(response.data);
-    })
+  function DockerStatus(){
+      axios.get('/docker/api/v1/state/')
+      .then(response => {
+       console.log(response.data);
+     })
+  }
 
   function onSrvRoomClickHandler() {
     navigate('/serverRoom');
     console.log('서버 룸으로 이동!');
   }
+  
 
   return (
     <div
@@ -80,12 +83,12 @@ function LandingPage() {
         <PieChart
           data={[
             {
-              value: response.data.mem,
+              value: parseFloat(response.data.men),
               color: '#F6CB44',
               name: 'name1',
             },
           ]}
-          reveal={response.data.mem}
+          reveal={parseFloat(response.data.men)}
           lineWidth={18}
           background="#f3f3f3"
           lengthAngle={360}
