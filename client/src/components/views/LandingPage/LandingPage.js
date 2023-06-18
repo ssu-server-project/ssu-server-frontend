@@ -74,8 +74,25 @@ function LandingPage() {
           width: '100%',
         }}
       >
-        {/* Header 내용 생략 */}
+        <ul className="header-ul">
+          <li id="logo">
+            <a href="https://ssu.ac.kr/">
+              <img style={{ width: '400px', marginLeft: '200px' }} src="image/soongsil.png" alt="Soongsil University" />
+            </a>
+          </li>
+          <li><a>숭실대학교</a></li>
+          <li><a>서버</a></li>
+          <li><a>대여 시스템</a></li>
+          <li id="vertical-line">|</li>
+          <li><a>NDI</a></li>
+        </ul>
 
+        <ul className="header-ul">
+          <li id="name">사용자 이름</li>
+          <li>
+            <img src="https://i.pinimg.com/564x/7a/c4/ed/7ac4edd64a67fccd0e2d547a9ffde845.jpg" id="profile-img" alt="profile" />
+          </li>
+        </ul>
       </header>
       <h2>시작 페이지</h2>
       <div
@@ -84,30 +101,11 @@ function LandingPage() {
           position: 'relative',
         }}
       >
-        {/* memData 값 출력 */}
-        {memData && (
-          <div
-            style={{
-              position: 'absolute',
-              right: '20px',
-              top: '20px',
-              backgroundColor: '#FFFFFF',
-              padding: '20px',
-              borderRadius: '4px',
-              border: '1px solid #DDDDDD',
-              transform: 'scale(3)',
-            }}
-          >
-            Mem: {memData}
-          </div>
-        )}
-
-        {/* 컨테이너 갯수 */}
         <div
           style={{
             position: 'absolute',
             right: '-200px',
-            bottom: '140px',
+            bottom: '150px',
             backgroundColor: '#FFFFFF',
             padding: '20px',
             borderRadius: '4px',
@@ -116,21 +114,7 @@ function LandingPage() {
           }}
         >
           Container Count: {containerCount}
-        </div>
-
-        {/* 사용 중인 컨테이너 수 */}
-        <div
-          style={{
-            position: 'absolute',
-            right: '-200px',
-            bottom: '200px',
-            backgroundColor: '#FFFFFF',
-            padding: '20px',
-            borderRadius: '4px',
-            border: '1px solid #DDDDDD',
-            transform: 'scale(1)',
-          }}
-        >
+          <br />
           Container Usage: {containerUsage}
         </div>
 
