@@ -28,6 +28,32 @@ function LandingPage() {
     console.log('서버 룸으로 이동!');
   }
 
+  const Chart = () => {
+    return (
+      <PieChart
+        data={[
+          {
+            value: 20,
+            color: '#F6CB44',
+            name: 'name1',
+          },
+        ]}
+        reveal={20}
+        lineWidth={18}
+        background="#f3f3f3"
+        lengthAngle={360}
+        rounded
+        animate
+        label={({ dataEntry }) => dataEntry.value + '%'}
+        labelStyle={{
+          fontSize: '26px',
+          fill: '#333333',
+        }}
+        labelPosition={0}
+      />
+    );
+  };
+
   return (
     <div
       style={{
@@ -69,29 +95,18 @@ function LandingPage() {
       <div
         style={{
           marginBottom: '425px',
+          display: 'flex',
+          justifyContent: 'space-around',
+          alignItems: 'center',
+          width: '100%',
         }}
       >
-        <PieChart
-          data={[
-            {
-              value: 20,
-              color: '#F6CB44',
-              name: 'name1',
-            },
-          ]}
-          reveal={20}
-          lineWidth={18}
-          background="#f3f3f3"
-          lengthAngle={360}
-          rounded
-          animate
-          label={({ dataEntry }) => dataEntry.value + '%'}
-          labelStyle={{
-            fontSize: '26px',
-            fill: '#333333',
-          }}
-          labelPosition={0}
-        />
+        <div>
+          <Chart />
+        </div>
+        <div>
+          <Chart />
+        </div>
         <button onClick={onSrvRoomClickHandler}>서버 룸</button>
       </div>
     </div>
