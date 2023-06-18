@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { PieChart } from 'react-minimal-pie-chart';
+import { response } from 'express';
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -22,6 +23,11 @@ function LandingPage() {
         console.log(response.data);
       });
   }
+
+  axios.get('/docker/api/v1/state/')
+    .then(response => {
+      console.log(response.data);
+    })
 
   function onSrvRoomClickHandler() {
     navigate('/serverRoom');
@@ -74,12 +80,12 @@ function LandingPage() {
         <PieChart
           data={[
             {
-              value: 20,
+              value: response.data.mem,
               color: '#F6CB44',
               name: 'name1',
             },
           ]}
-          reveal={20}
+          reveal={response.data.mem}
           lineWidth={18}
           background="#f3f3f3"
           lengthAngle={360}
