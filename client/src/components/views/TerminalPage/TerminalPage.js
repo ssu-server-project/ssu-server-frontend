@@ -1,19 +1,16 @@
-import React from 'react'
+import React, {useState} from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function TermianlPage() {
+    const navigate = useNavigate();
+    function onListHandler () {
+        navigate("/serverRoom");
+    };
+
     return (
         <div>
-            style={{
-                display:"grid",
-                 // width:"100%",
-                // height:"100%",
-                gridTemplateColumns:"50% 50%",
-                gridTemplateRows: "50% 50%"
-            }}
-            <div>1번 뭐지</div>
-            <div>2번 뭐지</div>
-            <div>3번 뭐지</div>
-            <div>CMD 창을 띄운다.</div>
+            <button onClick={onListHandler}>목록으로 돌아가기</button>
         </div>
     )
 }
