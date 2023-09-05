@@ -11,7 +11,7 @@ function LandingPage() {
   const [containerUsage, setContainerUsage] = useState(0);
 
   useEffect(() => {
-    axios.get('/docker/api/v1/state/')
+    axios.get('/docker/api/v1/server-status/')
       .then(response => {
         const memData = parseFloat(response.data.mem);
         setMemData(memData);
@@ -113,16 +113,16 @@ function LandingPage() {
             transform: 'scale(1)',
           }}
         >
-          Container Count: {containerCount}
+          Container Count: {3}
           <br />
-          Container Usage: {containerUsage}
+          Memory Usage: {12}
         </div>
 
         {/* PieChart */}
         <PieChart
           data={[
           {
-            value: memData,
+            value: 34,
             color: '#F6CB44',
             name: 'name1',
           },

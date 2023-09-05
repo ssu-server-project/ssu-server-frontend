@@ -49,7 +49,7 @@ const { isUtf8 } = require("buffer");
 app.get("/", (req, res) => res.send("Hello World! 안녕하세요!"));
 
 // 아래에서 server를 정의내려줘야 stopServer 함수에서 server.close()를 호출할 수 있다
-const server = app.listen(8080, () => {
+const server = app.listen(8082, () => {
   console.log('도커 컨트롤러 시작! 포트 8080에서 요청 기다리고 있습니다.');
 });
 
@@ -137,10 +137,11 @@ app.post('/docker/api/v1/img-delete/', async (req, res) => {
     }
   });
 });
-('/stop', async (req, res) => {
+app.post('/stop', async (req, res) => {
 
 
 });
+
 // API: /docker/api/v1/img-delete-all (GET)
 // 설명: GET 매서드를 이용하여 모든 이미지들을 삭제한다.
 app.get('/docker/api/v1/img-delete-all/', async (req, res) => {
@@ -235,7 +236,7 @@ app.post('/docker/api/v1/img-run/', async (req, res) => {
     } else {
       console.log(data);
       res.json(data);
-      res.status(200);
+      
     }
   });
 });

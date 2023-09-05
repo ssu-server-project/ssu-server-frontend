@@ -20,7 +20,7 @@ function ServerRoomPage(props) {
           navigate("/");
       };
   function onServerHandler () {
-    navigate("/terminal");
+    window.location.href = 'http://localhost:3002';
   };
   return (
     <div>
